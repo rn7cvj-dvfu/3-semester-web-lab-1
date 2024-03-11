@@ -49,4 +49,4 @@ class Listener:
             self.responseBytes = body
             
             
-            print(f"Recived {self.responseBytes.len()} bytes from {addr}")
+            print(f"Recived {self.responseBytes.__len__()} bytes from {addr}")
