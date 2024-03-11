@@ -9,6 +9,7 @@ class Listener:
     responseBytes : bytes 
 
     def init(self):
+        self.responseBytes = None
         self.startListener()
 
     def getRecivedBytes(self):
