@@ -7,18 +7,18 @@ from config import PORT
 class Listener:
 
     responseBytes : bytes 
-    onByteResive : list[callable]
+    onByteResive : callable
 
     def __init__(self):
         self.responseBytes = None
-        self.onByteResive : list[callable] = []
+        self.onByteResive  = None
         self.startListener()
 
     def getRecivedBytes(self):
         return self.responseBytes
 
     def subscribeToByteRecive(self , onByteResive: callable):
-        self.onByteResive.append(onByteResive)
+        self.onByteResive = onByteResive
 
     def startListener(self):
         
@@ -34,7 +34,7 @@ class Listener:
             sock.listen(1)
             conn, addr = sock.accept()
 
-            print(f"Connect to {addr}")
+            print(f"Connecion from {addr[0]}")
 
             responseBytes : list[bytes] = []
 
@@ -56,7 +56,8 @@ class Listener:
             self.responseBytes = body
             
             
-            print(f"Recived {self.responseBytes.__len__()} bytes from {addr}")
+            print(f"Recived {self.responseBytes.__len__()} bytes from {addr[0]}")
 
-            for sub in self.onByteResive:
-                sub()
+            if self.onByteResive:
+                self.onByteResive()
+                

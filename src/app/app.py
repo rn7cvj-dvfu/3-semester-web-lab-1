@@ -22,6 +22,7 @@ class App(QWidget):
     ipTextField: QLineEdit
 
     imageViewer: ImageViewer
+
     imageViewerWidth: int
     imageViewerHeight: int
 
@@ -38,8 +39,6 @@ class App(QWidget):
         
         # LISTENER_PROVIDER.subscribeToByteRecive(self.showRecivedData)
         
-        self.imageViewer = ImageViewer(imageViewerWidth , imageViewerHeight)
-
         self.initUI()
 
     def initUI(self):
@@ -114,10 +113,8 @@ class App(QWidget):
 
     def showRecivedData(self):
         
-        if self.imageViewer.isActiveWindow():
-            return
     
-        self.imageViewer.updateUi()
+        self.imageViewer  = ImageViewer(self.imageViewerWidth , self.imageViewerHeight , 200 + self.appWidth , 200 )
         self.imageViewer.show()
 
            
