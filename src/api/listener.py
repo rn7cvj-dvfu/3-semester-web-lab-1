@@ -29,6 +29,8 @@ class Listener:
             sock.listen(1)
             conn, addr = sock.accept()
 
+            print(f"Connect to {addr}")
+
             responseBytes : list[bytes] = []
 
             tempBytes  = conn.recv(230)

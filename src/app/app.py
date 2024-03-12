@@ -1,3 +1,4 @@
+import socket
 
 from PyQt6.QtWidgets import QWidget, QPushButton, QLineEdit , QLabel  ,QHBoxLayout , QVBoxLayout
 from PyQt6.QtWidgets import QFileDialog
@@ -12,6 +13,10 @@ class App(QWidget):
 
     startButton: QPushButton
     showRecivedDataButton: QPushButton
+
+    deviceIpLabel: QLabel
+    deviceIp: QLabel
+
 
     ipFieldLabel: QLabel
     ipTextField: QLineEdit
@@ -38,8 +43,24 @@ class App(QWidget):
         self.setGeometry(200, 200, self.appWidth, self.appHeight)
         self.setWindowTitle("App")
 
+        # Device ip label
+
+        self.deviceIpLabel = QLabel(text="Device ip:")
+        
+        hostname  = socket.gethostname()
+        IPAddr = socket.gethostbyname(hostname)
+        self.deviceIp = QLabel(text = str(IPAddr))
+
+        ipLabelBox = QHBoxLayout()
+        ipLabelBox.addWidget(self.deviceIpLabel)
+        ipLabelBox.addWidget(self.deviceIp)
+
+
+        ipLabelWidget = QWidget()
+        ipLabelWidget.setLayout(ipLabelBox)
+
         # Ip enter text field
-        self.ipFieldLabel = QLabel(text="Enter IP Address")
+        self.ipFieldLabel = QLabel(text="Enter reciver IP Address")
         self.ipTextField = QLineEdit()
 
         ipEnterBox = QHBoxLayout()
@@ -63,8 +84,11 @@ class App(QWidget):
         buttonWidget = QWidget()
         buttonWidget.setLayout(buttonBox)
 
+        # Layout    
+
         layout = QVBoxLayout()
 
+        layout.addWidget(ipLabelWidget)
         layout.addWidget(ipEnterWidget)
         layout.addWidget(buttonWidget)
         
