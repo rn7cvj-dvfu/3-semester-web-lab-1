@@ -7,7 +7,7 @@ from src.app.image_viewer import ImageViewer
 from src.utils.converter import Converter
 from src.api.sender import Sender
 
-from src.provider.provider import SENDER_PROVIDER
+from src.provider.provider import SENDER_PROVIDER , LISTENER_PROVIDER
 
 class App(QWidget):
 
@@ -36,6 +36,10 @@ class App(QWidget):
         self.imageViewerWidth = imageViewerWidth
         self.imageViewerHeight = imageViewerHeight
         
+        # LISTENER_PROVIDER.subscribeToByteRecive(self.showRecivedData)
+        
+        self.imageViewer = ImageViewer(imageViewerWidth , imageViewerHeight)
+
         self.initUI()
 
     def initUI(self):
@@ -55,6 +59,7 @@ class App(QWidget):
         ipLabelBox.addWidget(self.deviceIpLabel)
         ipLabelBox.addWidget(self.deviceIp)
 
+        ipLabelBox.addStretch(1)
 
         ipLabelWidget = QWidget()
         ipLabelWidget.setLayout(ipLabelBox)
@@ -109,8 +114,10 @@ class App(QWidget):
 
     def showRecivedData(self):
         
+        if self.imageViewer.isActiveWindow():
+            return
     
-        self.imageViewer = ImageViewer(self.imageViewerWidth , self.imageViewerHeight)
-
+        self.imageViewer.updateUi()
         self.imageViewer.show()
+
            

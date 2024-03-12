@@ -1,4 +1,4 @@
-from PyQt6.QtGui import QPixmap , QImage
+from PyQt6.QtGui import QCloseEvent, QPixmap , QImage
 from PyQt6.QtWidgets import QWidget, QLabel , QVBoxLayout , QHBoxLayout
 from PyQt6.QtCore import Qt
 
@@ -9,26 +9,36 @@ class ImageViewer(QWidget):
     imageViewerWidth: int
     imageViewerHeight: int
     imageBytes: bytes
+    imageLabel : QLabel
 
     def __init__(self ,  imageViewerWidth: int , imageViewerHeight: int):
         super().__init__()
 
         self.imageViewerWidth = imageViewerWidth
         self.imageViewerHeight = imageViewerHeight
-        self.imageBytes = LISTENER_PROVIDER.getRecivedBytes()
+       
+        # LISTENER_PROVIDER.subscribeToByteRecive(self.updateUi)
 
-        self.initUI()
-
-    def initUI(self):
         self.setGeometry(200, 200, self.imageViewerWidth, self.imageViewerHeight)
+      
         self.setWindowTitle("Recived Image")
+
+        self.updateUi()
+
+    def updateUi(self):
+        self.imageBytes = LISTENER_PROVIDER.getRecivedBytes()
         
-        if self.imageBytes:
-            try:
-                self.showRecivedImage()
-                return
-            except:
-                print("Error showing image")
+        if not self.imageBytes:
+            print("Invalid image")
+            self.showError()
+            return
+            
+        try:
+            self.showRecivedImage()
+            print("Update image")
+            return
+        except:
+            print("Error showing image")
         
         self.showError()
 
@@ -46,6 +56,10 @@ class ImageViewer(QWidget):
         
         image = QImage.fromData(self.imageBytes)
         pixmap = QPixmap.fromImage(image)
-        label = QLabel(self)
-        label.setPixmap(pixmap.scaled(self.imageViewerWidth, self.imageViewerHeight, Qt.AspectRatioMode.KeepAspectRatio))
-        label.show()
+
+        self.imageLabel = QLabel(self)
+        self.imageLabel.setPixmap(pixmap.scaled(self.imageViewerWidth, self.imageViewerHeight, Qt.AspectRatioMode.KeepAspectRatio))
+
+        self.imageLabel.move(0, 0 )
+
+        self.imageLabel.show()

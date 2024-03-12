@@ -7,13 +7,18 @@ from config import PORT
 class Listener:
 
     responseBytes : bytes 
+    onByteResive : list[callable]
 
     def __init__(self):
         self.responseBytes = None
+        self.onByteResive : list[callable] = []
         self.startListener()
 
     def getRecivedBytes(self):
         return self.responseBytes
+
+    def subscribeToByteRecive(self , onByteResive: callable):
+        self.onByteResive.append(onByteResive)
 
     def startListener(self):
         
@@ -23,7 +28,7 @@ class Listener:
     def listenerLoop(self):
             
         sock = socket.socket()
-        sock.bind(('', int(5000)))
+        sock.bind(('', int(PORT)))
 
         while True:
             sock.listen(1)
@@ -52,3 +57,6 @@ class Listener:
             
             
             print(f"Recived {self.responseBytes.__len__()} bytes from {addr}")
+
+            for sub in self.onByteResive:
+                sub()
